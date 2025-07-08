@@ -14,44 +14,488 @@
     <link rel="icon" href="img/favicon.ico">
 
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- CSS Libraries -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
-    <link href="lib/animate/animate.min.css" rel="stylesheet">
-    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
-    <link href="lib/lightbox/css/lightbox.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
 
     <!-- Custom Styles -->
-    <link href="css/style.css" rel="stylesheet">
-
-    <!-- Matomo Analytics -->
-    <script>
-        var _paq = window._paq = window._paq || [];
-        _paq.push(['trackPageView']);
-        _paq.push(['enableLinkTracking']);
-        (function () {
-            var u = "https://djsingh.matomo.cloud/";
-            _paq.push(['setTrackerUrl', u + 'matomo.php']);
-            _paq.push(['setSiteId', '1']);
-            var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
-            g.async = true; g.src = u + 'matomo.js'; s.parentNode.insertBefore(g, s);
-        })();
-    </script>
-
     <style>
+        :root {
+            --primary-color: #667eea;
+            --secondary-color: #764ba2;
+            --accent-color: #f093fb;
+            --text-dark: #2d3748;
+            --text-light: #718096;
+            --bg-light: #f8fafc;
+            --bg-white: #ffffff;
+            --shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         html {
             scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--text-dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Navbar */
+        .navbar {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.95) !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .navbar-brand {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .navbar-nav .nav-link {
+            font-weight: 500;
+            color: var(--text-dark) !important;
+            margin: 0 15px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .navbar-nav .nav-link:hover {
+            color: var(--primary-color) !important;
+        }
+
+        .navbar-nav .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        .navbar-nav .nav-link:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><circle cx="200" cy="200" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="800" cy="300" r="1.5" fill="rgba(255,255,255,0.15)"/><circle cx="400" cy="600" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="900" cy="700" r="2" fill="rgba(255,255,255,0.1)"/></svg>');
+            animation: float 20s infinite linear;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+            100% { transform: translateY(0px) rotate(360deg); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            color: white;
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 4rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .hero .lead {
+            font-size: 1.3rem;
+            font-weight: 300;
+            margin-bottom: 2rem;
+            animation: fadeInUp 1s ease-out 0.2s both;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Section Styles */
+        .section {
+            padding: 80px 0;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 3rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            transform: translateX(-50%);
+        }
+
+        /* About Section */
+        .about-card {
+            background: var(--bg-white);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .about-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .skill-category {
+            margin-bottom: 30px;
+        }
+
+        .skill-title {
+            color: var(--primary-color);
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+
+        .skill-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .skill-tag {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 8px 16px;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: transform 0.3s ease;
+        }
+
+        .skill-tag:hover {
+            transform: scale(1.05);
+        }
+
+        /* Coursework Section */
+        .coursework-card {
+            background: var(--bg-white);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            height: 100%;
+            transition: transform 0.3s ease;
+        }
+
+        .coursework-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .coursework-card h5 {
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .coursework-card ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .coursework-card li {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            transition: color 0.3s ease;
+        }
+
+        .coursework-card li:hover {
+            color: var(--primary-color);
+        }
+
+        .coursework-card li::before {
+            content: '▶';
+            color: var(--primary-color);
+            margin-right: 10px;
+        }
+
+        .cgpa-badge {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: 600;
+            display: inline-block;
+            margin-top: 15px;
+        }
+
+        /* Publications Section */
+        .publication-item {
+            background: var(--bg-white);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .publication-item:hover {
+            transform: translateX(10px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .publication-title {
+            color: var(--text-dark);
+            font-weight: 600;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+        }
+
+        .publication-authors {
+            color: var(--text-light);
+            margin-bottom: 10px;
+        }
+
+        .publication-venue {
+            color: var(--primary-color);
+            font-weight: 500;
+            margin-bottom: 15px;
+        }
+
+        .publication-link {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: transform 0.3s ease;
+            display: inline-block;
+        }
+
+        .publication-link:hover {
+            transform: scale(1.05);
+            text-decoration: none;
+            color: white;
+        }
+
+        /* Resume Section */
+        .resume-section {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            text-align: center;
+        }
+
+        .resume-btn {
+            background: white;
+            color: var(--primary-color);
+            border: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .resume-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            color: var(--primary-color);
+        }
+
+        /* Resources Section */
+        .resource-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .resource-link {
+            background: var(--bg-white);
+            padding: 30px 40px;
+            border-radius: 15px;
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 600;
+            font-size: 1.1rem;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .resource-link:hover {
+            text-decoration: none;
+            color: var(--primary-color);
+            transform: translateY(-5px);
+            border-color: var(--primary-color);
+        }
+
+        /* Footer */
+        .footer {
+            background: linear-gradient(135deg, #2d3748, #1a202c);
+            color: white;
+            padding: 60px 0 30px;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .social-link {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .social-link:hover {
+            background: var(--primary-color);
+            transform: translateY(-3px);
+            color: white;
+            text-decoration: none;
+        }
+
+        /* Back to Top Button */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            font-size: 1.2rem;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            opacity: 0;
+            visibility: hidden;
+            z-index: 1000;
+        }
+
+        .back-to-top.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero .lead {
+                font-size: 1.1rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .navbar-nav .nav-link {
+                margin: 0 5px;
+            }
+            
+            .skill-tags {
+                justify-content: center;
+            }
+            
+            .resource-links {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+
+        /* Animations */
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+
+        .animate-on-scroll.animate {
+            opacity: 1;
+            transform: translateY(0);
         }
     </style>
 </head>
 
 <body data-spy="scroll" data-target=".navbar" data-offset="70">
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top shadow-sm">
+    <nav class="navbar navbar-expand-lg navbar-light sticky-top">
         <div class="container">
-            <a class="navbar-brand font-weight-bold" href="#home">Dhananjay</a>
+            <a class="navbar-brand" href="#home">Dhananjay</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -69,143 +513,279 @@
     </nav>
 
     <!-- Hero Section -->
-    <header class="hero bg-light text-center py-5" id="home">
+    <section class="hero" id="home">
         <div class="container">
-            <h1 class="display-4 font-weight-bold">Dhananjay Kumar</h1>
-            <p class="lead">Research Scholar, Artificial Intelligence, IIT Kharagpur</p>
+            <div class="hero-content">
+                <h1>Dhananjay Kumar</h1>
+                <p class="lead">Research Scholar, Artificial Intelligence, IIT Kharagpur</p>
+            </div>
         </div>
-    </header>
+    </section>
 
     <!-- About Section -->
-    <section id="about" class="py-5">
+    <section id="about" class="section">
         <div class="container">
-            <h2 class="mb-4">About Me</h2>
-            <p>I am currently working as an Assistant Professor at Jain University. I completed my PhD in the Department of AI at IIT Kharagpur. My research focuses on Trend Analysis and Predictive Modelling in Academic Genealogy Networks.</p>
-            <p>Notable platforms in this domain include the <a href="https://genealogy.math.ndsu.nodak.edu/" target="_blank">Mathematics Genealogy Project (MGP)</a> and the <a href="https://academictree.org/" target="_blank">Academic Family Tree (AFT)</a>.</p>
-            <div class="row mt-4">
-                <div class="col-md-6">
-                    <h5 class="text-danger">Languages Known</h5>
-                    <p>Python, C</p>
-                    <h5 class="text-danger">Databases</h5>
-                    <p>Neo4j, MySQL</p>
-                    <h5 class="text-danger">Operating Systems</h5>
-                    <p>Ubuntu (Preferred), Windows</p>
-                </div>
-                <div class="col-md-6">
-                    <h5 class="text-danger">Research Interests</h5>
-                    <p>NLP, Graph Learning, Deep Learning, Computer Vision, Generative AI, LLMs</p>
-                    <h5 class="text-danger">Libraries & Frameworks</h5>
-                    <p>Numpy, Pandas, SciPy, Scikit-learn, NLTK, SPACY, CoreNLP, Gensim, Tensorflow, PyTorch, Scrapy, Matplotlib</p>
-                    <h5 class="text-danger">IDEs</h5>
-                    <p>Jupyter, Visual Studio, Vim</p>
+            <h2 class="section-title animate-on-scroll">About Me</h2>
+            <div class="about-card animate-on-scroll">
+                <p class="mb-4">I am currently working as an Assistant Professor at Jain University. I completed my PhD in the Department of AI at IIT Kharagpur. My research focuses on Trend Analysis and Predictive Modelling in Academic Genealogy Networks.</p>
+                <p class="mb-4">Notable platforms in this domain include the <a href="https://genealogy.math.ndsu.nodak.edu/" target="_blank">Mathematics Genealogy Project (MGP)</a> and the <a href="https://academictree.org/" target="_blank">Academic Family Tree (AFT)</a>.</p>
+                
+                <div class="row mt-5">
+                    <div class="col-md-6">
+                        <div class="skill-category">
+                            <div class="skill-title">Languages Known</div>
+                            <div class="skill-tags">
+                                <span class="skill-tag">Python</span>
+                                <span class="skill-tag">C</span>
+                            </div>
+                        </div>
+                        
+                        <div class="skill-category">
+                            <div class="skill-title">Databases</div>
+                            <div class="skill-tags">
+                                <span class="skill-tag">Neo4j</span>
+                                <span class="skill-tag">MySQL</span>
+                            </div>
+                        </div>
+                        
+                        <div class="skill-category">
+                            <div class="skill-title">Operating Systems</div>
+                            <div class="skill-tags">
+                                <span class="skill-tag">Ubuntu</span>
+                                <span class="skill-tag">Windows</span>
+                            </div>
+                        </div>
+                        
+                        <div class="skill-category">
+                            <div class="skill-title">IDEs</div>
+                            <div class="skill-tags">
+                                <span class="skill-tag">Jupyter</span>
+                                <span class="skill-tag">Visual Studio</span>
+                                <span class="skill-tag">Vim</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="skill-category">
+                            <div class="skill-title">Research Interests</div>
+                            <div class="skill-tags">
+                                <span class="skill-tag">NLP</span>
+                                <span class="skill-tag">Graph Learning</span>
+                                <span class="skill-tag">Deep Learning</span>
+                                <span class="skill-tag">Computer Vision</span>
+                                <span class="skill-tag">Generative AI</span>
+                                <span class="skill-tag">LLMs</span>
+                            </div>
+                        </div>
+                        
+                        <div class="skill-category">
+                            <div class="skill-title">Libraries & Frameworks</div>
+                            <div class="skill-tags">
+                                <span class="skill-tag">NumPy</span>
+                                <span class="skill-tag">Pandas</span>
+                                <span class="skill-tag">SciPy</span>
+                                <span class="skill-tag">Scikit-learn</span>
+                                <span class="skill-tag">NLTK</span>
+                                <span class="skill-tag">spaCy</span>
+                                <span class="skill-tag">CoreNLP</span>
+                                <span class="skill-tag">Gensim</span>
+                                <span class="skill-tag">TensorFlow</span>
+                                <span class="skill-tag">PyTorch</span>
+                                <span class="skill-tag">Scrapy</span>
+                                <span class="skill-tag">Matplotlib</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Coursework Section -->
-    <section id="coursework" class="bg-light py-5">
+    <section id="coursework" class="section" style="background: var(--bg-light);">
         <div class="container">
-            <h2 class="mb-4">Coursework</h2>
+            <h2 class="section-title animate-on-scroll">Coursework</h2>
             <div class="row">
-                <div class="col-md-6">
-                    <h5>M.Tech Coursework</h5>
-                    <ul>
-                        <li>Algorithm Design and Analysis</li>
-                        <li>Speech & NLP</li>
-                        <li>Knowledge Modelling & Semantic Technology</li>
-                        <li>Data Warehousing & Data Mining</li>
-                        <li>Internet Architecture & Protocols</li>
-                        <li>Language Processing for E-learning</li>
-                        <li>Cloud Computing</li>
-                    </ul>
-                    <p><strong>CGPA:</strong> 8.46</p>
+                <div class="col-md-6 mb-4">
+                    <div class="coursework-card animate-on-scroll">
+                        <h5>M.Tech Coursework</h5>
+                        <ul>
+                            <li>Algorithm Design and Analysis</li>
+                            <li>Speech & NLP</li>
+                            <li>Knowledge Modelling & Semantic Technology</li>
+                            <li>Data Warehousing & Data Mining</li>
+                            <li>Internet Architecture & Protocols</li>
+                            <li>Language Processing for E-learning</li>
+                            <li>Cloud Computing</li>
+                        </ul>
+                        <div class="cgpa-badge">CGPA: 8.46</div>
+                    </div>
                 </div>
-                <div class="col-md-6">
-                    <h5>PhD Coursework</h5>
-                    <ul>
-                        <li>Statistical Methods</li>
-                        <li>Machine Learning</li>
-                        <li>Educational Data Analytics</li>
-                    </ul>
-                    <p><strong>CGPA:</strong> 9.0</p>
+                <div class="col-md-6 mb-4">
+                    <div class="coursework-card animate-on-scroll">
+                        <h5>PhD Coursework</h5>
+                        <ul>
+                            <li>Statistical Methods</li>
+                            <li>Machine Learning</li>
+                            <li>Educational Data Analytics</li>
+                        </ul>
+                        <div class="cgpa-badge">CGPA: 9.0</div>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Publications Section -->
-    <section id="publications" class="py-5">
+    <section id="publications" class="section">
         <div class="container">
-            <h2 class="mb-4">Publications</h2>
-            <ul class="list-unstyled">
-                <li class="mb-3">
-                    <h5>Computational Fact Validation from Knowledge Graph using Structured and Unstructured Information</h5>
-                    <p><strong>Authors:</strong> Saransh Khandelwal and <strong>Dhananjay Kumar</strong></p>
-                    <p><strong>Conference:</strong> ACM IKDD CoDS and COMAD 2020</p>
-                    <a href="https://doi.org/10.1145/3371158.3371187" target="_blank">DOI: 10.1145/3371158.3371187</a>
-                </li>
-                <li class="mb-3">
-                    <h5>Researcher influence prediction (ResIP) using academic genealogy network</h5>
-                    <p><strong>Authors:</strong> <strong>Dhananjay Kumar</strong>, Plaban Kumar Bhowmick, Jiaul H Paik</p>
-                    <p><strong>Journal:</strong> Journal of Informetrics, 2023</p>
-                    <a href="https://doi.org/10.1016/j.joi.2023.101392" target="_blank">DOI: 10.1016/j.joi.2023.101392</a>
-                </li>
-                <li class="mb-3">
-                    <h5>Analysis of the academic genealogy graph of an Indian ETD repository</h5>
-                    <p><strong>Authors:</strong> <strong>Dhananjay Kumar</strong>, Plaban Kumar Bhowmick, Sumana Dey, Debarshi Kumar Sanyal</p>
-                    <p><strong>Journal:</strong> Scientometrics, 2023</p>
-                    <a href="https://doi.org/10.1007/s11192-023-04728-z" target="_blank">DOI: 10.1007/s11192-023-04728-z</a>
-                </li>
-            </ul>
+            <h2 class="section-title animate-on-scroll">Publications</h2>
+            
+            <div class="publication-item animate-on-scroll">
+                <h5 class="publication-title">Computational Fact Validation from Knowledge Graph using Structured and Unstructured Information</h5>
+                <p class="publication-authors"><strong>Authors:</strong> Saransh Khandelwal and <strong>Dhananjay Kumar</strong></p>
+                <p class="publication-venue">ACM IKDD CoDS and COMAD 2020</p>
+                <a href="https://doi.org/10.1145/3371158.3371187" target="_blank" class="publication-link">
+                    <i class="fas fa-external-link-alt"></i> View Publication
+                </a>
+            </div>
+
+            <div class="publication-item animate-on-scroll">
+                <h5 class="publication-title">Researcher influence prediction (ResIP) using academic genealogy network</h5>
+                <p class="publication-authors"><strong>Authors:</strong> <strong>Dhananjay Kumar</strong>, Plaban Kumar Bhowmick, Jiaul H Paik</p>
+                <p class="publication-venue">Journal of Informetrics, 2023</p>
+                <a href="https://doi.org/10.1016/j.joi.2023.101392" target="_blank" class="publication-link">
+                    <i class="fas fa-external-link-alt"></i> View Publication
+                </a>
+            </div>
+
+            <div class="publication-item animate-on-scroll">
+                <h5 class="publication-title">Analysis of the academic genealogy graph of an Indian ETD repository</h5>
+                <p class="publication-authors"><strong>Authors:</strong> <strong>Dhananjay Kumar</strong>, Plaban Kumar Bhowmick, Sumana Dey, Debarshi Kumar Sanyal</p>
+                <p class="publication-venue">Scientometrics, 2023</p>
+                <a href="https://doi.org/10.1007/s11192-023-04728-z" target="_blank" class="publication-link">
+                    <i class="fas fa-external-link-alt"></i> View Publication
+                </a>
+            </div>
         </div>
     </section>
 
     <!-- Resume Section -->
-    <section id="resume" class="bg-light py-5 text-center">
-        <div class="container">
-            <h2>Resume</h2>
-            <a href="Dhananjay_Resume.pdf" class="btn btn-primary mt-3">Download Resume</a>
+    <section id="resume" class="section resume-section">
+        <div class="container text-center">
+            <h2 class="section-title animate-on-scroll" style="color: white;">Resume</h2>
+            <p class="lead animate-on-scroll" style="color: rgba(255,255,255,0.8); margin-bottom: 2rem;">Download my complete resume to learn more about my experience and qualifications.</p>
+            <a href="Dhananjay_Resume.pdf" class="resume-btn animate-on-scroll">
+                <i class="fas fa-download"></i> Download Resume
+            </a>
         </div>
     </section>
 
     <!-- Resources Section -->
-    <section id="resource" class="py-5">
-        <div class="container text-center">
-            <h2 class="mb-4">AI/ML Resources</h2>
-            <a href="./ML.html" class="d-block">ML Guide</a>
-            <a href="./Resource.html" class="d-block">More Links</a>
+    <section id="resource" class="section">
+        <div class="container">
+            <h2 class="section-title animate-on-scroll">AI/ML Resources</h2>
+            <div class="resource-links">
+                <a href="./ML.html" class="resource-link animate-on-scroll">
+                    <i class="fas fa-brain"></i> ML Guide
+                </a>
+                <a href="./Resource.html" class="resource-link animate-on-scroll">
+                    <i class="fas fa-link"></i> More Links
+                </a>
+            </div>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer class="bg-dark text-white py-4" id="social">
+    <footer class="footer" id="social">
         <div class="container text-center">
-            <h5>Dhananjay Kumar</h5>
-            <p>IIT Kharagpur, West Bengal - 721302</p>
-            <div class="d-flex justify-content-center my-3">
-                <a href="https://github.com/Djasingh" class="text-white mx-2"><i class="fab fa-github"></i></a>
-                <a href="https://www.linkedin.com/in/singh-dj/" class="text-white mx-2"><i class="fab fa-linkedin-in"></i></a>
-                <a href="https://www.techgig.com/pub/dhananjaykumar68" class="text-white mx-2"><i class="fa fa-tag"></i></a>
-                <a href="https://www.facebook.com/djsingh00/" class="text-white mx-2"><i class="fab fa-facebook-f"></i></a>
+            <h5 class="animate-on-scroll">Dhananjay Kumar</h5>
+            <p class="animate-on-scroll" style="color: rgba(255,255,255,0.8);">IIT Kharagpur, West Bengal - 721302</p>
+            <div class="social-links animate-on-scroll">
+                <a href="https://github.com/Djasingh" class="social-link" target="_blank">
+                    <i class="fab fa-github"></i>
+                </a>
+                <a href="https://www.linkedin.com/in/singh-dj/" class="social-link" target="_blank">
+                    <i class="fab fa-linkedin-in"></i>
+                </a>
+                <a href="https://www.techgig.com/pub/dhananjaykumar68" class="social-link" target="_blank">
+                    <i class="fa fa-tag"></i>
+                </a>
+                <a href="https://www.facebook.com/djsingh00/" class="social-link" target="_blank">
+                    <i class="fab fa-facebook-f"></i>
+                </a>
             </div>
-            <p class="mb-0">&copy; 2025 Personal Website | Designed with <a href="https://htmlcodex.com/" class="text-white">HTML Codex</a></p>
+            <p class="animate-on-scroll" style="color: rgba(255,255,255,0.6); margin-top: 2rem;">
+                &copy; 2025 Personal Website | Designed with <a href="https://htmlcodex.com/" style="color: rgba(255,255,255,0.8);">HTML Codex</a>
+            </p>
         </div>
     </footer>
 
     <!-- Back to Top -->
-    <a href="#home" class="btn btn-primary back-to-top"><i class="fa fa-chevron-up"></i></a>
+    <button class="back-to-top" id="backToTop">
+        <i class="fas fa-chevron-up"></i>
+    </button>
 
     <!-- JS Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
-    <script src="lib/typed/typed.min.js"></script>
-    <script src="lib/wow/wow.min.js"></script>
-    <script src="lib/owlcarousel/owl.carousel.min.js"></script>
-    <script src="lib/lightbox/js/lightbox.min.js"></script>
-    <script src="js/main.js"></script>
+    
     <script>
-      $('body').scrollspy({ target: '.navbar', offset: 70 });
+        $(document).ready(function() {
+            // Scroll spy
+            $('body').scrollspy({ target: '.navbar', offset: 70 });
+            
+            // Smooth scrolling
+            $('a[href^="#"]').on('click', function(event) {
+                var target = $(this.getAttribute('href'));
+                if( target.length ) {
+                    event.preventDefault();
+                    $('html, body').stop().animate({
+                        scrollTop: target.offset().top - 70
+                    }, 1000);
+                }
+            });
+            
+            // Back to top button
+            $(window).scroll(function() {
+                if ($(this).scrollTop() > 100) {
+                    $('#backToTop').addClass('show');
+                } else {
+                    $('#backToTop').removeClass('show');
+                }
+            });
+            
+            $('#backToTop').click(function() {
+                $('html, body').animate({scrollTop: 0}, 800);
+                return false;
+            });
+            
+            // Animate on scroll
+            function animateOnScroll() {
+                $('.animate-on-scroll').each(function() {
+                    var elementTop = $(this).offset().top;
+                    var elementBottom = elementTop + $(this).outerHeight();
+                    var viewportTop = $(window).scrollTop();
+                    var viewportBottom = viewportTop + $(window).height();
+                    
+                    if (elementBottom > viewportTop && elementTop < viewportBottom) {
+                        $(this).addClass('animate');
+                    }
+                });
+            }
+            
+            $(window).on('scroll', animateOnScroll);
+            animateOnScroll(); // Initial call
+            
+            // Navbar background change on scroll
+            $(window).scroll(function() {
+                if ($(this).scrollTop() > 50) {
+                    $('.navbar').addClass('scrolled');
+                } else {
+                    $('.navbar').removeClass('scrolled');
+                }
+            });
+        });
     </script>
 </body>
 
