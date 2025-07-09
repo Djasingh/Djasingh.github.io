@@ -334,6 +334,24 @@
             border-radius: 10px;
             font-size: 1.1em;
             margin: 10px 0;
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+        }
+
+        .demo-input:focus {
+            outline: none;
+            box-shadow: 0 0 10px rgba(52, 152, 219, 0.5);
+        }
+
+        textarea.demo-input {
+            resize: vertical;
+            min-height: 80px;
+            font-family: inherit;
+        }
+
+        select.demo-input {
+            width: auto;
+            cursor: pointer;
         }
 
         .demo-output {
@@ -565,12 +583,24 @@
         </div>
 
         <div class="section">
-            <h2>Interactive Demo</h2>
+            <h2>Live LLM Demo</h2>
             <div class="demo-area">
-                <h3>Try Text Completion</h3>
-                <input type="text" class="demo-input" placeholder="Enter the beginning of a sentence..." id="demo-input">
-                <button class="interactive-button" onclick="generateText()">Generate Text</button>
-                <div class="demo-output" id="demo-output">Generated text will appear here...</div>
+                <h3>Real AI Text Generation</h3>
+                <p style="margin-bottom: 15px; opacity: 0.8;">Powered by Hugging Face's free API</p>
+                <textarea class="demo-input" placeholder="Enter your prompt here..." id="demo-input" rows="3"></textarea>
+                <div style="margin: 10px 0;">
+                    <select id="model-select" class="demo-input" style="width: auto; display: inline-block; margin-right: 10px;">
+                        <option value="microsoft/DialoGPT-medium">DialoGPT (Conversation)</option>
+                        <option value="gpt2">GPT-2 (Text Generation)</option>
+                        <option value="facebook/blenderbot-400M-distill">BlenderBot (Chat)</option>
+                        <option value="microsoft/DialoGPT-small">DialoGPT Small</option>
+                    </select>
+                    <button class="interactive-button" onclick="generateRealText()" id="generate-btn">Generate with AI</button>
+                </div>
+                <div class="demo-output" id="demo-output">AI-generated text will appear here...</div>
+                <div class="demo-output" style="font-size: 0.9em; opacity: 0.7; margin-top: 10px;">
+                    <strong>Note:</strong> This uses Hugging Face's free Inference API. For your own projects, get a free API key at <a href="https://huggingface.co/settings/tokens" target="_blank" style="color: #3498db;">huggingface.co/settings/tokens</a>
+                </div>
             </div>
         </div>
 
@@ -600,26 +630,74 @@
     </div>
 
     <script>
-        function generateText() {
+        function generateRealText() {
             const input = document.getElementById('demo-input').value;
             const output = document.getElementById('demo-output');
+            const button = document.getElementById('generate-btn');
+            const modelSelect = document.getElementById('model-select');
             
             if (!input.trim()) {
-                output.textContent = 'Please enter some text to complete.';
+                output.textContent = 'Please enter some text to generate a response.';
                 return;
             }
             
-            // Simple mock text generation
-            const completions = [
-                'and it was a beautiful day for a walk in the park.',
-                'which reminded me of my childhood memories.',
-                'so I decided to share this experience with others.',
-                'while contemplating the complexity of language.',
-                'as the sun set over the horizon.'
-            ];
+            button.textContent = 'Generating...';
+            button.disabled = true;
+            output.textContent = 'AI is thinking...';
             
-            const randomCompletion = completions[Math.floor(Math.random() * completions.length)];
-            output.textContent = input + ' ' + randomCompletion;
+            const selectedModel = modelSelect.value;
+            
+            // Use Hugging Face's free inference API
+            fetch(`https://api-inference.huggingface.co/models/${selectedModel}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    inputs: input,
+                    parameters: {
+                        max_length: 100,
+                        temperature: 0.7,
+                        do_sample: true,
+                        top_p: 0.9
+                    }
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                button.textContent = 'Generate with AI';
+                button.disabled = false;
+                
+                if (data.error) {
+                    if (data.error.includes('currently loading')) {
+                        output.innerHTML = `<span style="color: #f39c12;">Model is loading... This may take 20-30 seconds. Please try again.</span>`;
+                    } else {
+                        output.innerHTML = `<span style="color: #e74c3c;">Error: ${data.error}</span>`;
+                    }
+                } else if (data[0] && data[0].generated_text) {
+                    let generatedText = data[0].generated_text;
+                    // For conversation models, clean up the response
+                    if (selectedModel.includes('DialoGPT') || selectedModel.includes('blenderbot')) {
+                        generatedText = generatedText.replace(input, '').trim();
+                        output.innerHTML = `<strong>You:</strong> ${input}<br><strong>AI:</strong> ${generatedText}`;
+                    } else {
+                        output.innerHTML = `<strong>Generated text:</strong><br>${generatedText}`;
+                    }
+                } else {
+                    output.innerHTML = '<span style="color: #e74c3c;">Unexpected response format. Please try again.</span>';
+                }
+            })
+            .catch(error => {
+                button.textContent = 'Generate with AI';
+                button.disabled = false;
+                output.innerHTML = `<span style="color: #e74c3c;">Network error. Please check your connection and try again.</span>`;
+                console.error('Error:', error);
+            });
+        }
+
+        function generateText() {
+            // This function is no longer used but kept for compatibility
+            generateRealText();
         }
 
         function animateTokens() {
@@ -652,7 +730,15 @@
         // Add example text to the demo
         document.getElementById('demo-input').addEventListener('focus', function() {
             if (this.value === '') {
-                this.placeholder = 'e.g., "The future of AI is"';
+                this.placeholder = 'e.g., "What is the future of artificial intelligence?" or "Tell me a short story about space exploration"';
+            }
+        });
+
+        // Add Enter key support for text generation
+        document.getElementById('demo-input').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                generateRealText();
             }
         });
     </script>
