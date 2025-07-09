@@ -646,12 +646,13 @@
             output.textContent = 'AI is thinking...';
             
             const selectedModel = modelSelect.value;
+            const apiKey = process.env.HUGGINGFACE_API_KEY;
             
             // Use Hugging Face's free inference API
             fetch(`https://api-inference.huggingface.co/models/${selectedModel}`, {
                 method: 'POST',
                 headers: {
-                    'Authorization': `Bearer ${HUGGINGFACE_API_KEY}`,
+                    'Authorization': `Bearer ${apiKey}`,
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
