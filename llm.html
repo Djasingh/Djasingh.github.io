@@ -651,6 +651,7 @@
             fetch(`https://api-inference.huggingface.co/models/${selectedModel}`, {
                 method: 'POST',
                 headers: {
+                    'Authorization': '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',
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
