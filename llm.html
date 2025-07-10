@@ -586,21 +586,32 @@
             <h2>Live LLM Demo</h2>
             <div class="demo-area">
                 <h3>Real AI Text Generation</h3>
-                <p style="margin-bottom: 15px; opacity: 0.8;">Powered by Hugging Face's free API</p>
+                <p style="margin-bottom: 15px; opacity: 0.8;">Powered by Ollama's free local models</p>
                 <textarea class="demo-input" placeholder="Enter your prompt here..." id="demo-input" rows="3"></textarea>
                 <div style="margin: 10px 0;">
                     <select id="model-select" class="demo-input" style="width: auto; display: inline-block; margin-right: 10px;">
-                        <option value="microsoft/DialoGPT-medium">DialoGPT (Conversation)</option>
-                        <option value="gpt2">GPT-2 (Text Generation)</option>
-                        <option value="facebook/blenderbot-400M-distill">BlenderBot (Chat)</option>
-                        <option value="microsoft/DialoGPT-small">DialoGPT Small</option>
+                        <option value="phi3">Phi-3 (Fast & Efficient)</option>
+                        <option value="llama3">Llama 3 (Advanced)</option>
+                        <option value="gemma">Gemma (Google)</option>
+                        <option value="mistral">Mistral (Multilingual)</option>
                     </select>
-                    <button class="interactive-button" onclick="generateRealText()" id="generate-btn">Generate with AI</button>
+                    <button class="interactive-button" onclick="generateWithOllama()" id="generate-btn">Generate with AI</button>
                 </div>
                 <div class="demo-output" id="demo-output">AI-generated text will appear here...</div>
                 <div class="demo-output" style="font-size: 0.9em; opacity: 0.7; margin-top: 10px;">
-                    <strong>Note:</strong> This uses Hugging Face's free Inference API. For your own projects, get a free API key at <a href="https://huggingface.co/settings/tokens" target="_blank" style="color: #3498db;">huggingface.co/settings/tokens</a>
+                    <strong>Alternative Demo:</strong> Try the text completion below, or install <a href="https://ollama.ai" target="_blank" style="color: #3498db;">Ollama</a> locally to run models on your machine.
                 </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Text Completion Demo</h2>
+            <div class="demo-area">
+                <h3>Simulated LLM Behavior</h3>
+                <p style="margin-bottom: 15px; opacity: 0.8;">Experience how LLMs complete text patterns</p>
+                <input type="text" class="demo-input" placeholder="Enter the beginning of a sentence..." id="demo-input-2">
+                <button class="interactive-button" onclick="generateSimulatedText()">Complete Text</button>
+                <div class="demo-output" id="demo-output-2">Generated text will appear here...</div>
             </div>
         </div>
 
@@ -630,7 +641,7 @@
     </div>
 
     <script>
-        function generateRealText() {
+        function generateWithOllama() {
             const input = document.getElementById('demo-input').value;
             const output = document.getElementById('demo-output');
             const button = document.getElementById('generate-btn');
@@ -643,26 +654,20 @@
             
             button.textContent = 'Generating...';
             button.disabled = true;
-            output.textContent = 'AI is thinking...';
+            output.textContent = 'Trying to connect to local Ollama...';
             
             const selectedModel = modelSelect.value;
-            const apiKey = process.env.HUGGINGFACE_API_KEY;
             
-            // Use Hugging Face's free inference API
-            fetch(`https://api-inference.huggingface.co/models/${selectedModel}`, {
+            // Try to connect to local Ollama installation
+            fetch('http://localhost:11434/api/generate', {
                 method: 'POST',
                 headers: {
-                    'Authorization': `Bearer ${apiKey}`,
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    inputs: input,
-                    parameters: {
-                        max_length: 100,
-                        temperature: 0.7,
-                        do_sample: true,
-                        top_p: 0.9
-                    }
+                    model: selectedModel,
+                    prompt: input,
+                    stream: false
                 })
             })
             .then(response => response.json())
@@ -670,36 +675,114 @@
                 button.textContent = 'Generate with AI';
                 button.disabled = false;
                 
-                if (data.error) {
-                    if (data.error.includes('currently loading')) {
-                        output.innerHTML = `<span style="color: #f39c12;">Model is loading... This may take 20-30 seconds. Please try again.</span>`;
-                    } else {
-                        output.innerHTML = `<span style="color: #e74c3c;">Error: ${data.error}</span>`;
-                    }
-                } else if (data[0] && data[0].generated_text) {
-                    let generatedText = data[0].generated_text;
-                    // For conversation models, clean up the response
-                    if (selectedModel.includes('DialoGPT') || selectedModel.includes('blenderbot')) {
-                        generatedText = generatedText.replace(input, '').trim();
-                        output.innerHTML = `<strong>You:</strong> ${input}<br><strong>AI:</strong> ${generatedText}`;
-                    } else {
-                        output.innerHTML = `<strong>Generated text:</strong><br>${generatedText}`;
-                    }
+                if (data.response) {
+                    output.innerHTML = `<strong>AI Response:</strong><br>${data.response}`;
                 } else {
-                    output.innerHTML = '<span style="color: #e74c3c;">Unexpected response format. Please try again.</span>';
+                    output.innerHTML = '<span style="color: #e74c3c;">No response received. Make sure Ollama is running locally.</span>';
                 }
             })
             .catch(error => {
                 button.textContent = 'Generate with AI';
                 button.disabled = false;
-                output.innerHTML = `<span style="color: #e74c3c;">Network error. Please check your connection and try again.</span>`;
-                console.error('Error:', error);
+                output.innerHTML = `<span style="color: #f39c12;">Ollama not found locally. This demo requires <a href="https://ollama.ai" target="_blank" style="color: #3498db;">Ollama</a> to be installed and running on your machine.<br><br>Try the text completion demo below instead!</span>`;
             });
         }
 
+        function generateSimulatedText() {
+            const input = document.getElementById('demo-input-2').value;
+            const output = document.getElementById('demo-output-2');
+            
+            if (!input.trim()) {
+                output.textContent = 'Please enter some text to complete.';
+                return;
+            }
+            
+            // Sophisticated text completion patterns
+            const patterns = {
+                'artificial intelligence': [
+                    'will revolutionize how we work, learn, and interact with technology in the coming decades.',
+                    'has the potential to solve complex problems in healthcare, climate change, and scientific research.',
+                    'requires careful consideration of ethical implications and responsible development practices.'
+                ],
+                'machine learning': [
+                    'algorithms can identify patterns in data that humans might miss, enabling breakthrough discoveries.',
+                    'is transforming industries from finance to healthcare through predictive analytics and automation.',
+                    'models require vast amounts of data and computational power to achieve optimal performance.'
+                ],
+                'neural networks': [
+                    'are inspired by the human brain and consist of interconnected nodes that process information.',
+                    'can learn complex patterns through multiple layers of computation and backpropagation.',
+                    'have enabled remarkable advances in computer vision, natural language processing, and robotics.'
+                ],
+                'the future': [
+                    'holds incredible possibilities for human advancement through technological innovation.',
+                    'will likely be shaped by our choices today regarding sustainability and social equity.',
+                    'depends on how well we adapt to rapid changes in technology and society.'
+                ],
+                'climate change': [
+                    'represents one of the most pressing challenges of our time, requiring global cooperation.',
+                    'is already affecting weather patterns, sea levels, and ecosystems around the world.',
+                    'solutions include renewable energy, sustainable agriculture, and innovative technologies.'
+                ],
+                'space exploration': [
+                    'opens new frontiers for scientific discovery and potential human settlement.',
+                    'has led to countless technological innovations that benefit life on Earth.',
+                    'represents humanity\'s drive to understand our place in the universe.'
+                ]
+            };
+            
+            // Find the best matching pattern
+            const inputLower = input.toLowerCase();
+            let bestMatch = null;
+            let bestScore = 0;
+            
+            for (const [key, completions] of Object.entries(patterns)) {
+                if (inputLower.includes(key)) {
+                    const score = key.length;
+                    if (score > bestScore) {
+                        bestMatch = completions;
+                        bestScore = score;
+                    }
+                }
+            }
+            
+            // Default completions for general text
+            const defaultCompletions = [
+                'and this opens up many interesting possibilities for the future.',
+                'which demonstrates the remarkable complexity of human language and thought.',
+                'showing how interconnected our world has become through technology.',
+                'revealing patterns that help us understand complex systems better.',
+                'while considering the broader implications for society and progress.',
+                'as we navigate the challenges and opportunities of modern life.',
+                'through innovative approaches that combine creativity with analytical thinking.'
+            ];
+            
+            const completions = bestMatch || defaultCompletions;
+            const randomCompletion = completions[Math.floor(Math.random() * completions.length)];
+            
+            // Add typing animation
+            output.innerHTML = `<strong>Input:</strong> ${input}<br><strong>Completion:</strong> <span id="typing-text"></span>`;
+            
+            const typingElement = document.getElementById('typing-text');
+            let i = 0;
+            const typeWriter = () => {
+                if (i < randomCompletion.length) {
+                    typingElement.textContent += randomCompletion.charAt(i);
+                    i++;
+                    setTimeout(typeWriter, 30);
+                }
+            };
+            
+            setTimeout(typeWriter, 300);
+        }
+
+        function generateRealText() {
+            // Fallback to simulated text
+            generateSimulatedText();
+        }
+
         function generateText() {
-            // This function is no longer used but kept for compatibility
-            generateRealText();
+            generateSimulatedText();
         }
 
         function animateTokens() {
@@ -732,7 +815,13 @@
         // Add example text to the demo
         document.getElementById('demo-input').addEventListener('focus', function() {
             if (this.value === '') {
-                this.placeholder = 'e.g., "What is the future of artificial intelligence?" or "Tell me a short story about space exploration"';
+                this.placeholder = 'e.g., "What is the future of artificial intelligence?" or "Tell me about machine learning"';
+            }
+        });
+
+        document.getElementById('demo-input-2').addEventListener('focus', function() {
+            if (this.value === '') {
+                this.placeholder = 'e.g., "The future of artificial intelligence" or "Climate change"';
             }
         });
 
@@ -740,7 +829,14 @@
         document.getElementById('demo-input').addEventListener('keydown', function(e) {
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
-                generateRealText();
+                generateWithOllama();
+            }
+        });
+
+        document.getElementById('demo-input-2').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                generateSimulatedText();
             }
         });
     </script>
